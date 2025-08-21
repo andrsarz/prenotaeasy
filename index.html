@@ -108,28 +108,31 @@
   </div>
 
   <script>
-    document.getElementById("bookingForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+  document.getElementById("bookingForm").addEventListener("submit", function(e) {
+    e.preventDefault();
 
-      const phoneNumber = "393206007603"; // <- INSERISCI qui il numero del ristorante (39 = prefisso Italia)
+    const phoneNumber = "393206007603"; // <- INSERISCI qui il numero del ristorante (39 = prefisso Italia)
 
-      const name = document.getElementById("name").value;
-      const people = document.getElementById("people").value;
-      const date = document.getElementById("date").value;
-      const time = document.getElementById("time").value;
-      const notes = document.getElementById("notes").value || "Nessuna";
+    const name = document.getElementById("name").value;
+    const people = document.getElementById("people").value;
+    const date = document.getElementById("date").value;
+    const time = document.getElementById("time").value;
+    const notes = document.getElementById("notes").value || "Nessuna";
 
-      const message = `Nuova Prenotazione:%0A
-👤 Nome: ${name}%0A
-👥 Persone: ${people}%0A
-📅 Data: ${date}%0A
-⏰ Ora: ${time}%0A
+    // Creo il messaggio in formato "pulito"
+    const message = `Nuova Prenotazione:
+👤 Nome: ${name}
+👥 Persone: ${people}
+📅 Data: ${date}
+⏰ Ora: ${time}
 📝 Note: ${notes}`;
 
-      const url = `https://wa.me/${phoneNumber}?text=${message}`;
-      window.open(url, "_blank");
-    });
-  </script>
+    // Lo passo dentro encodeURIComponent per renderlo leggibile a WhatsApp
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(url, "_blank");
+  });
+</script>
 
 </body>
 </html>
