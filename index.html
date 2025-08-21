@@ -4,301 +4,165 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Prenotazione Ristorante · WhatsApp</title>
-  <meta name="description" content="Form minimal e moderno per inviare prenotazioni ristorante via WhatsApp" />
+  <meta name="description" content="Form moderno per prenotare e inviare i dettagli via WhatsApp (scelta contatto all'invio)" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Nuovo font più elegante -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg: #0b0c10;
-      --card: rgba(255,255,255,.06);
-      --stroke: rgba(255,255,255,.12);
-      --text: #EAF0F5;
-      --muted: #A9B3BD;
-      --accent: #00C853; /* WhatsApp-ish */
-      --danger: #ff5a7a;
+      --bg: #fdf8f4;
+      --card: #fff;
+      --stroke: rgba(0,0,0,.1);
+      --text: #3b2f2f;
+      --muted: #6d5c5c;
+      --accent: #E74C3C;
+      --accent-2: #27ae60;
+      --danger: #c0392b;
       --radius: 18px;
-      --blur: 16px;
+      --blur: 12px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      color:var(--text); background:radial-gradient(1200px 800px at 20% 0%, #0d1b2a 0%, #0b0c10 50%, #0b0c10 100%);
+      margin:0; font-family:'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      color:var(--text);
+      background:
+        linear-gradient(180deg, #fffdfb, var(--bg));
       overflow-x:hidden;
     }
-    /* Animated blobs background */
-    .blobs { position: fixed; inset: -20vmax; z-index: -1; filter: blur(60px) saturate(140%); opacity:.45; }
-    .blob { position: absolute; width: 40vmax; height: 40vmax; border-radius: 50%; mix-blend-mode: screen; }
-    .b1{ background:#00ff99; left:5%; top:5%; animation: float1 16s ease-in-out infinite;}
-    .b2{ background:#00a6ff; right:10%; top:20%; animation: float2 18s ease-in-out infinite;}
-    .b3{ background:#ffd166; left:25%; bottom:0; animation: float3 22s ease-in-out infinite;}
-    @keyframes float1{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(8%, -6%) scale(1.08);} }
-    @keyframes float2{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(-6%, 10%) scale(1.05);} }
-    @keyframes float3{ 0%,100%{ transform: translate(0,0) scale(1);} 50%{ transform: translate(6%, -8%) scale(1.07);} }
-
     .wrap{min-height:100%; display:grid; place-items:center; padding: clamp(16px, 4vw, 48px)}
-
     .card{
-      width:min(780px, 92vw); background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid var(--stroke); border-radius:var(--radius); backdrop-filter: blur(var(--blur));
-      box-shadow: 0 20px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+      width:min(780px, 92vw); background:var(--card);
+      border:1px solid var(--stroke); border-radius:var(--radius);
+      box-shadow: 0 12px 30px rgba(0,0,0,.08);
       overflow:hidden; position:relative;
     }
-    .card::before{ /* subtle top glow */
-      content:""; position:absolute; inset: -1px -1px auto -1px; height:140px; pointer-events:none;
-      background: radial-gradient(600px 160px at 50% -10%, rgba(255,255,255,.15), transparent 60%);
-    }
-
     .header{display:flex; align-items:center; gap:12px; padding:22px 22px 10px 22px}
-    .logo{width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background:linear-gradient(135deg,#00C853,#00a6ff); box-shadow:0 6px 20px rgba(0,200,83,.35)}
-    .title{font-weight:600; letter-spacing:.2px}
+    .logo{width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow:0 4px 10px rgba(231,76,60,.25)}
+    .title{font-weight:600; letter-spacing:.2px; font-size:1.2rem}
     .subtitle{color:var(--muted); font-size:.94rem; margin-top:2px}
-
     form{padding: 18px 22px 22px 22px; display:grid; grid-template-columns: 1fr 1fr; gap:18px}
     @media (max-width:720px){ form{grid-template-columns: 1fr} }
-
-    .field{position:relative}
+    .label-top{ display:block; margin: 0 0 6px 2px; font-size:.9rem; color:var(--muted); font-weight:500 }
     .input, select, textarea{
-      width:100%; background:rgba(0,0,0,.25); color:var(--text); border:1px solid var(--stroke); border-radius:14px;
-      padding: 18px 14px 14px 14px; outline:none; transition: border .2s ease, box-shadow .2s ease, transform .08s ease;
+      width:100%; background:#fff; color:var(--text); border:1px solid var(--stroke); border-radius:14px;
+      padding: 14px; outline:none; transition: border .2s ease, box-shadow .2s ease, transform .08s ease;
+      font-family:'Poppins', sans-serif; font-size:.95rem;
     }
-    .input:focus, select:focus, textarea:focus{ border-color: rgba(0,200,83,.65); box-shadow:0 0 0 6px rgba(0,200,83,.15) }
-    .input:hover, select:hover, textarea:hover{ border-color: rgba(255,255,255,.2) }
-    .input:active{ transform: translateY(1px) }
-
-    .label{position:absolute; left:14px; top:14px; color:var(--muted); pointer-events:none; transition: all .18s ease; transform-origin:left top;}
-    .input:not(:placeholder-shown) + .label,
-    .input:focus + .label,
-    textarea:not(:placeholder-shown) + .label,
-    textarea:focus + .label,
-    select:focus + .label {
-      transform: translateY(-12px) scale(.82); background:linear-gradient(180deg, rgba(11,12,16,0), rgba(11,12,16,.7)); padding:0 6px; color:#d7ffe9
-    }
-
+    .input:focus, select:focus, textarea:focus{ border-color: var(--accent); box-shadow:0 0 0 4px rgba(231,76,60,.15) }
+    .input:hover, select:hover, textarea:hover{ border-color: rgba(0,0,0,.2) }
     .row-2{grid-column: 1 / -1}
-
-    .pill{
-      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; font-size:.88rem; color:#c6ffe0;
-      background: linear-gradient(90deg, rgba(0,200,83,.25), rgba(0,166,255,.18)); border:1px solid rgba(255,255,255,.16);
-    }
-
+    .label-static{ display:block; margin:0 0 6px 2px; font-size:.9rem; color:var(--muted); font-weight:500 }
     .controls{display:flex; gap:10px; align-items:center}
-    .stepper{display:flex; align-items:center; border:1px solid var(--stroke); border-radius:12px; overflow:hidden}
-    .stepper button{ all:unset; padding:10px 12px; cursor:pointer; background:rgba(255,255,255,.03)}
-    .stepper input{ width:56px; text-align:center; border:0; background:transparent; color:var(--text); padding:10px 6px }
-
-    .preview{background:rgba(255,255,255,.04); border:1px dashed rgba(255,255,255,.18); border-radius:14px; padding:12px 14px; font-size:.92rem; color:#e7fff3}
-
+    .stepper{display:flex; align-items:center; border:1px solid var(--stroke); border-radius:12px; overflow:hidden; background:#fff}
+    .stepper button{ all:unset; padding:10px 12px; cursor:pointer; background:#fafafa; color:var(--text); font-family:'Poppins', sans-serif; font-weight:600 }
+    .stepper input{ width:56px; text-align:center; border:0; background:transparent; color:var(--text); padding:10px 6px; font-family:'Poppins', sans-serif }
+    .preview{background:#fff; border:1px dashed rgba(0,0,0,.15); border-radius:14px; padding:12px 14px; font-size:.92rem; color:var(--text); font-family:'Poppins', sans-serif}
     .actions{grid-column: 1 / -1; display:flex; justify-content:space-between; gap:12px; align-items:center}
-    .left-actions{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-
-    .btn{
-      --h: 52px; height: var(--h); display:inline-grid; place-items:center; padding:0 18px; border-radius:14px; border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(0,0,0,.15), rgba(255,255,255,.04)); color:white; cursor:pointer; position:relative; overflow:hidden;
-      transition: transform .08s ease, filter .2s ease, border-color .2s ease;
-    }
-    .btn:hover{ filter: brightness(1.08); border-color: rgba(255,255,255,.24) }
+    .btn{--h: 52px; height: var(--h); display:inline-grid; place-items:center; padding:0 18px; border-radius:14px; border:1px solid rgba(0,0,0,.1); background: linear-gradient(180deg, var(--accent), #c63b2f); color:white; cursor:pointer; position:relative; overflow:hidden; transition: transform .08s ease, filter .2s ease, border-color .2s ease; font-family:'Poppins', sans-serif; font-weight:500}
+    .btn:hover{ filter: brightness(1.05); border-color: rgba(0,0,0,.2) }
     .btn:active{ transform: translateY(1px) }
-
-    .btn-primary{ background: linear-gradient(180deg, rgba(0,200,83,.85), rgba(0,200,83,.72)); box-shadow: 0 10px 30px rgba(0,200,83,.35); }
-    .btn-primary .shine{ position:absolute; inset:0; background: radial-gradient(120px 40px at var(--mx,0%) -10%, rgba(255,255,255,.55), transparent 60%); mix-blend-mode: screen; pointer-events:none }
-
-    .checkbox{ display:flex; gap:10px; align-items:flex-start; color:var(--muted); font-size:.9rem }
-    .checkbox input{ margin-top:3px }
-
-    .error{ color:var(--danger); font-size:.9rem }
-    .toast{ position: fixed; left:50%; transform: translateX(-50%); bottom:18px; background: rgba(0,0,0,.7); border:1px solid rgba(255,255,255,.15); backdrop-filter: blur(10px);
-      color:white; padding:10px 14px; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,.4); opacity:0; pointer-events:none; transition: opacity .25s ease, transform .25s ease; }
-    .toast.show{ opacity:1; transform: translate(-50%, -6px)}
-
-    .footer{ color:var(--muted); font-size:.8rem; padding: 0 22px 18px 22px }
-    a.muted{ color: #9ce6bc; text-decoration: none }
+    .checkbox{ display:flex; gap:10px; align-items:flex-start; color:var(--muted); font-size:.9rem; font-family:'Poppins', sans-serif }
+    .error{ color:var(--danger); font-size:.9rem; font-family:'Poppins', sans-serif }
+    .footer{ padding: 12px 22px 20px 22px; font-size:.85rem; color:var(--muted); border-top:1px solid var(--stroke); background:#fff; font-family:'Poppins', sans-serif }
   </style>
 </head>
 <body>
-  <div class="blobs" aria-hidden="true">
-    <div class="blob b1"></div>
-    <div class="blob b2"></div>
-    <div class="blob b3"></div>
-  </div>
-
   <main class="wrap">
     <section class="card" role="form" aria-labelledby="formTitle">
       <div class="header">
-        <div class="logo" aria-hidden="true">🍽️</div>
+        <div class="logo" aria-hidden="true">🍕</div>
         <div>
           <div class="title" id="formTitle">Prenota il tuo tavolo</div>
-          <div class="subtitle">Invia i dettagli su WhatsApp in 1 click</div>
+          <div class="subtitle">Dettagli chiari, invio rapido su WhatsApp</div>
         </div>
       </div>
-
       <form id="bookingForm" novalidate>
-        <!-- Nome -->
         <div class="field">
-          <input class="input" id="nome" name="nome" type="text" placeholder=" " autocomplete="name" required aria-required="true" />
-          <label class="label" for="nome">Nome *</label>
+          <label class="label-top" for="nome">Nome *</label>
+          <input class="input" id="nome" name="nome" type="text" autocomplete="name" required aria-required="true" />
         </div>
-        <!-- Telefono -->
         <div class="field">
-          <input class="input" id="telefono" name="telefono" type="tel" placeholder=" " autocomplete="tel" inputmode="tel" pattern="[+0-9 ]{6,}" required aria-required="true" />
-          <label class="label" for="telefono">Telefono *</label>
+          <label class="label-top" for="telefono">Telefono *</label>
+          <input class="input" id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" pattern="[+0-9 ]{6,}" required aria-required="true" />
         </div>
-
-        <!-- Data -->
         <div class="field">
-          <input class="input" id="data" name="data" type="date" placeholder=" " required aria-required="true" />
-          <label class="label" for="data">Data *</label>
+          <label class="label-top" for="data">Data *</label>
+          <input class="input" id="data" name="data" type="date" required aria-required="true" />
         </div>
-        <!-- Ora -->
         <div class="field">
-          <input class="input" id="ora" name="ora" type="time" placeholder=" " required aria-required="true" />
-          <label class="label" for="ora">Ora *</label>
+          <label class="label-top" for="ora">Ora *</label>
+          <input class="input" id="ora" name="ora" type="time" required aria-required="true" />
         </div>
-
-        <!-- Persone (stepper) -->
         <div class="field">
-          <label class="label" for="persone" style="transform: translateY(-12px) scale(.82); background:linear-gradient(180deg, rgba(11,12,16,0), rgba(11,12,16,.7)); padding:0 6px; color:#d7ffe9">Persone</label>
-          <div class="controls stepper" aria-label="Numero di persone">
-            <button type="button" aria-label="Diminuisci" id="minus">−</button>
+          <label class="label-static" for="persone">Persone</label>
+          <div class="controls stepper">
+            <button type="button" id="minus">−</button>
             <input id="persone" name="persone" type="number" min="1" max="20" value="2" />
-            <button type="button" aria-label="Aumenta" id="plus">＋</button>
+            <button type="button" id="plus">＋</button>
           </div>
         </div>
-
-        <!-- Preferenza tavolo -->
         <div class="field">
+          <label class="label-top" for="preferenza">Preferenza tavolo</label>
           <select id="preferenza" class="input" name="preferenza">
-            <option value="" hidden></option>
+            <option value="" hidden>Seleziona…</option>
             <option>Interno</option>
             <option>Esterno</option>
             <option>Qualsiasi</option>
           </select>
-          <label class="label" for="preferenza">Preferenza tavolo</label>
         </div>
-
-        <!-- Note -->
         <div class="field row-2">
-          <textarea class="input" id="note" name="note" placeholder=" " rows="3" maxlength="240"></textarea>
-          <label class="label" for="note">Note (allergie, richieste...)</label>
+          <label class="label-top" for="note">Note (allergie, richieste...)</label>
+          <textarea class="input" id="note" name="note" rows="3" maxlength="240"></textarea>
         </div>
-
-        <!-- Preview dinamica -->
         <div class="row-2">
-          <div class="pill" aria-hidden="true">Anteprima messaggio</div>
+          <div class="pill">Anteprima messaggio</div>
         </div>
-        <div class="preview row-2" id="preview" aria-live="polite"></div>
-
+        <div class="preview row-2" id="preview"></div>
         <div class="actions">
           <div class="left-actions">
             <label class="checkbox"><input type="checkbox" id="privacy" required aria-required="true"/> Accetto l'informativa privacy *</label>
-            <div class="error" id="error" role="alert" aria-live="assertive"></div>
+            <div class="error" id="error"></div>
           </div>
-          <button class="btn btn-primary" id="sendBtn" type="submit">
-            <span>Invia su WhatsApp</span>
-            <div class="shine" aria-hidden="true"></div>
-          </button>
+          <button class="btn btn-primary" id="sendBtn" type="submit">Invia su WhatsApp</button>
         </div>
       </form>
-      <div class="footer">Personalizza il numero WhatsApp e il testo del messaggio nel codice. Funziona su smartphone e desktop (apre WhatsApp Web se disponibile). <a class="muted" href="#" id="testDesktop">Prova con numero fittizio</a></div>
+      <div class="footer">Quando invii il form si aprirà WhatsApp (Web/App) e potrai scegliere il contatto.</div>
     </section>
   </main>
-
-  <div class="toast" id="toast">Copiato negli appunti</div>
-
-  <script>
-    // === CONFIGURA QUI IL NUMERO WHATSAPP DEL RISTORANTE ===
-    // formato E.164 senza spazi/es. Italia: "39" + numero
-    const WHATSAPP_NUMBER = "393206007603"; // ← metti qui il numero reale
-
-    // Utils formattazione
-    const fmtDate = (value) => {
-      if(!value) return "";
-      const d = new Date(value + 'T00:00:00');
-      return new Intl.DateTimeFormat('it-IT', { weekday:'long', day:'2-digit', month:'long', year:'numeric'}).format(d);
-    };
-
-    const el = (id)=>document.getElementById(id);
-    const fields = ['nome','telefono','data','ora','persone','preferenza','note'];
-
-    const preview = () => {
-      const v = Object.fromEntries(fields.map(f=>[f, el(f)?.value?.trim()]));
-      const lines = [
-        `Ciao! Vorrei prenotare un tavolo.`,
-        v.nome? `• Nome: ${v.nome}`: null,
-        v.telefono? `• Telefono: ${v.telefono}`: null,
-        (v.data||v.ora)? `• Quando: ${fmtDate(v.data)}${v.ora? ` alle ${v.ora}`: ''}`: null,
-        v.persone? `• Persone: ${v.persone}`: null,
-        v.preferenza? `• Tavolo: ${v.preferenza}`: null,
-        v.note? `• Note: ${v.note}`: null,
-      ].filter(Boolean).join('\n');
-      el('preview').textContent = lines;
-      return lines;
-    };
-
-    // init
-    preview();
-    fields.forEach(id=> el(id)?.addEventListener('input', preview));
-
-    // stepper
-    el('minus').addEventListener('click', ()=>{
-      const n = el('persone');
-      n.value = Math.max(parseInt(n.value||'1')-1, parseInt(n.min));
-      preview();
-    });
-    el('plus').addEventListener('click', ()=>{
-      const n = el('persone');
-      n.value = Math.min(parseInt(n.value||'1')+1, parseInt(n.max));
-      preview();
-    });
-
-    // Hover shine
-    const btn = el('sendBtn');
-    btn.addEventListener('pointermove', (e)=>{
-      const r = btn.getBoundingClientRect();
-      btn.style.setProperty('--mx', ((e.clientX - r.left)/r.width*100).toFixed(1)+'%');
-    });
-
-    // Toast helper
-    const toast = (msg)=>{ const t=el('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1800)};
-
-    // Submit
-    el('bookingForm').addEventListener('submit', (e)=>{
-      e.preventDefault();
-      el('error').textContent = '';
-
-      const requiredOk = ['nome','telefono','data','ora'].every(id=> el(id).value.trim());
-      if(!requiredOk || !el('privacy').checked){
-        el('error').textContent = 'Compila i campi obbligatori e accetta la privacy.';
-        return;
-      }
-
-      const msg = preview();
-      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
-
-      // Copia negli appunti come fallback rapido
-      navigator.clipboard?.writeText(msg).then(()=>{ /* noop */ }).catch(()=>{});
-
-      // Micro-animazione
-      btn.animate([
-        { transform:'scale(1)' }, { transform:'scale(.98)' }, { transform:'scale(1)'}
-      ], { duration:240, easing:'cubic-bezier(.2,.8,.2,1)'});
-
-      // Apri WhatsApp (Web o App)
-      window.open(url, '_blank', 'noopener');
-    });
-
-    // Link test con numero fittizio
-    el('testDesktop').addEventListener('click', (e)=>{
-      e.preventDefault();
-      const demo = '390000000000';
-      const url = `https://wa.me/${demo}?text=${encodeURIComponent(preview())}`;
-      window.open(url, '_blank', 'noopener');
-    });
-
-    // Auto-limita data minima ad oggi
-    const today = new Date().toISOString().slice(0,10);
-    el('data').setAttribute('min', today);
-  </script>
+<script>
+  const el = (id)=>document.getElementById(id);
+  const fields = ['nome','telefono','data','ora','persone','preferenza','note'];
+  const fmtDate = (value) => {if(!value) return ""; const d = new Date(value+'T00:00:00'); return new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(d);};
+  const preview = () => {
+    const v = Object.fromEntries(fields.map(f=>[f, el(f)?.value?.trim()]));
+    const lines = [
+      `Ciao! Vorrei prenotare un tavolo.`,
+      v.nome? `• Nome: ${v.nome}`: null,
+      v.telefono? `• Telefono: ${v.telefono}`: null,
+      (v.data||v.ora)? `• Quando: ${fmtDate(v.data)}${v.ora? ` alle ${v.ora}`: ''}`: null,
+      v.persone? `• Persone: ${v.persone}`: null,
+      v.preferenza? `• Tavolo: ${v.preferenza}`: null,
+      v.note? `• Note: ${v.note}`: null,
+    ].filter(Boolean).join('\n');
+    el('preview').textContent = lines;
+    return lines;
+  };
+  preview();
+  fields.forEach(id=> el(id)?.addEventListener('input', preview));
+  el('minus').addEventListener('click', ()=>{const n=el('persone'); n.value=Math.max(parseInt(n.value||'1')-1, parseInt(n.min)); preview();});
+  el('plus').addEventListener('click', ()=>{const n=el('persone'); n.value=Math.min(parseInt(n.value||'1')+1, parseInt(n.max)); preview();});
+  el('bookingForm').addEventListener('submit',(e)=>{
+    e.preventDefault();
+    el('error').textContent='';
+    const requiredOk=['nome','telefono','data','ora'].every(id=> el(id).value.trim());
+    if(!requiredOk||!el('privacy').checked){el('error').textContent='Compila i campi obbligatori e accetta la privacy.';return;}
+    const msg=preview();
+    const url=`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+    window.open(url,'_blank','noopener');
+  });
+  el('data').setAttribute('min', new Date().toISOString().slice(0,10));
+</script>
 </body>
 </html>
